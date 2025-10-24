@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server'
 
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'yourusername'
@@ -42,7 +43,7 @@ export async function GET() {
 
     const eventsData = await eventsResponse.json()
 
-    const recentActivity = eventsData.slice(0, 5).map((event: any) => ({
+    const recentActivity = eventsData.slice(0, 23).map((event: any) => ({
       type: event.type.toLowerCase().replace('event', ''),
       repo: event.repo?.name || 'Unknown',
       message: getEventMessage(event),
@@ -61,7 +62,15 @@ export async function GET() {
         totalForks
       },
       contributions,
-      recentActivity
+      recentActivity,
+      topRepos: reposData.slice(0, 5).map((repo: any) => ({
+        name: repo.name,
+        description: repo.description,
+        stars: repo.stargazers_count,
+        forks: repo.forks_count,
+        language: repo.language,
+        url: repo.html_url
+      }))
     }
 
     return NextResponse.json(githubData)
@@ -91,7 +100,7 @@ function generateMockContributions() {
   const contributions = []
   const today = new Date()
   
-  for (let i = 6; i >= 0; i--) {
+  for (let i = 34; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
     contributions.push({

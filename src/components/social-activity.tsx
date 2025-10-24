@@ -33,6 +33,11 @@ const mockGitHubData = {
     { type: "push", repo: "portfolio-website", message: "Added new features", date: "2 hours ago" },
     { type: "star", repo: "react-components", message: "Starred repository", date: "1 day ago" },
     { type: "fork", repo: "ml-algorithms", message: "Forked repository", date: "2 days ago" }
+  ],
+  topRepos: [
+    { name: "portfolio-website", description: "My personal portfolio built with Next.js", stars: 12, forks: 3, language: "TypeScript", url: "https://github.com/yourusername/portfolio-website" },
+    { name: "iot-sensor-system", description: "IoT sensor monitoring system with ESP32", stars: 8, forks: 2, language: "C++", url: "https://github.com/yourusername/iot-sensor-system" },
+    { name: "signal-processing-app", description: "Digital signal processing web application", stars: 15, forks: 5, language: "Python", url: "https://github.com/yourusername/signal-processing-app" }
   ]
 }
 
@@ -71,20 +76,26 @@ const ActivityCard = ({ icon: Icon, title, value, change, color }: any) => (
 )
 
 export function SocialActivity() {
-  const [githubData, setGithubData] = useState(mockGitHubData)
+  const [githubData, setGithubData] = useState<any>(null)
   const [linkedinData, setLinkedinData] = useState(mockLinkedInData)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  // Simulate API calls
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-      // Replace with real API calls
-      setTimeout(() => {
+      try {
+        const githubResponse = await fetch('/api/github')
+        if (githubResponse.ok) {
+          const data = await githubResponse.json()
+          setGithubData(data)
+        } else {
+          setGithubData(mockGitHubData)
+        }
+      } catch (error) {
+        console.error('Failed to fetch GitHub data:', error)
         setGithubData(mockGitHubData)
-        setLinkedinData(mockLinkedInData)
-        setLoading(false)
-      }, 1000)
+      }
+      setLoading(false)
     }
     fetchData()
   }, [])
@@ -124,6 +135,13 @@ export function SocialActivity() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
+                {loading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-sm text-muted-foreground mt-2">Loading GitHub data...</p>
+                  </div>
+                ) : githubData ? (
+                  <>
                 {/* GitHub Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <ActivityCard
@@ -156,43 +174,62 @@ export function SocialActivity() {
                     Recent Contributions
                   </h4>
                   <ContributionChart contributions={githubData.contributions} />
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Last 7 days activity
-                  </p>
+                  
                 </div>
 
-                {/* Recent Activity */}
+                {/* Public Repositories */}
                 <div>
-                  <h4 className="font-semibold mb-3">Recent Activity</h4>
-                  <div className="space-y-3">
-                    {githubData.recentActivity.map((activity, index) => (
+                  <h4 className="font-semibold mb-3">Public Repositories</h4>
+                  <div className="space-y-3 max-h-64 overflow-y-auto">
+                    {githubData.topRepos?.map((repo:any, index:any) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-start gap-3 p-3 rounded-lg bg-muted/50"
+                        className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors cursor-pointer"
+                        onClick={() => window.open(repo.url, '_blank')}
                       >
                         <div className="p-1 rounded bg-primary/10">
-                          {activity.type === 'push' && <GitCommit className="h-3 w-3 text-primary" />}
-                          {activity.type === 'star' && <Star className="h-3 w-3 text-yellow-500" />}
-                          {activity.type === 'fork' && <GitFork className="h-3 w-3 text-blue-500" />}
+                          <GitCommit className="h-3 w-3 text-primary" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium">{activity.repo}</p>
-                          <p className="text-xs text-muted-foreground">{activity.message}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{activity.date}</p>
+                          <p className="text-sm font-medium">{repo.name}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">{repo.description || 'No description'}</p>
+                          <div className="flex items-center gap-3 mt-1">
+                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Star className="h-3 w-3" /> {repo.stars}
+                            </span>
+                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                              <GitFork className="h-3 w-3" /> {repo.forks}
+                            </span>
+                            {repo.language && (
+                              <span className="text-xs text-primary">{repo.language}</span>
+                            )}
+                          </div>
                         </div>
                       </motion.div>
-                    ))}
+                    )) || (
+                      <div className="text-sm text-muted-foreground text-center py-4">
+                        No repositories found
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                <Button variant="outline" className="w-full group">
-                  <Github className="mr-2 h-4 w-4" />
-                  View GitHub Profile
-                  <TrendingUp className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <Button variant="outline" className="w-full group" asChild>
+                  <a href={`https://github.com/${githubData.profile.username}`} target="_blank" rel="noopener noreferrer">
+                    <Github className="mr-2 h-4 w-4" />
+                    View GitHub Profile
+                    <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </a>
                 </Button>
+                </>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-sm text-muted-foreground">Failed to load GitHub data</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>
@@ -281,46 +318,48 @@ export function SocialActivity() {
         </div>
 
         {/* Combined Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-12"
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-center">Professional Network Overview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-primary mb-2">
-                    {githubData.profile.followers + linkedinData.profile.followers}
+        {githubData && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12"
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-center">Professional Network Overview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-primary mb-2">
+                      {(githubData?.profile?.followers || 0) + (linkedinData?.profile?.followers || 0)}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Total Followers</div>
                   </div>
-                  <div className="text-sm text-muted-foreground">Total Followers</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent mb-2">
-                    {linkedinData.profile.connections}+
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-accent mb-2">
+                      {linkedinData?.profile?.connections || 0}+
+                    </div>
+                    <div className="text-sm text-muted-foreground">Connections</div>
                   </div>
-                  <div className="text-sm text-muted-foreground">Connections</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-primary mb-2">
-                    {githubData.profile.publicRepos}
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-primary mb-2">
+                      {githubData?.profile?.publicRepos || 0}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Open Source</div>
                   </div>
-                  <div className="text-sm text-muted-foreground">Open Source</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-accent mb-2">
-                    {linkedinData.profile.posts}
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-accent mb-2">
+                      {linkedinData?.profile?.posts || 0}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Articles</div>
                   </div>
-                  <div className="text-sm text-muted-foreground">Articles</div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
       </div>
     </section>
   )

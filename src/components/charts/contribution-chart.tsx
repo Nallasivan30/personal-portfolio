@@ -27,7 +27,7 @@ export function ContributionChart({ contributions }: ContributionChartProps) {
 
   return (
     <div className="relative">
-      <div className="grid grid-cols-7 gap-1 mb-4">
+      <div className="grid grid-cols-14 gap-2 mb-2">
         {contributions.map((day, index) => (
           <motion.div
             key={index}
@@ -53,17 +53,6 @@ export function ContributionChart({ contributions }: ContributionChartProps) {
         </motion.div>
       )}
       
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>Less</span>
-        <div className="flex gap-1">
-          <div className="w-2 h-2 rounded-sm bg-muted" />
-          <div className="w-2 h-2 rounded-sm bg-primary/25" />
-          <div className="w-2 h-2 rounded-sm bg-primary/50" />
-          <div className="w-2 h-2 rounded-sm bg-primary/75" />
-          <div className="w-2 h-2 rounded-sm bg-primary" />
-        </div>
-        <span>More</span>
-      </div>
     </div>
   )
 }
