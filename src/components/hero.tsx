@@ -80,6 +80,21 @@ const FloatingTechIcon = ({ tech, index }: { tech: any; index: number }) => {
 }
 
 const ParticleField = () => {
+  const [dimensions, setDimensions] = useState({ width: 1200, height: 800 })
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setDimensions({ width: window.innerWidth, height: window.innerHeight })
+      
+      const handleResize = () => {
+        setDimensions({ width: window.innerWidth, height: window.innerHeight })
+      }
+      
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   return (
     <div className="absolute inset-0 overflow-hidden">
       {[...Array(50)].map((_, i) => (
@@ -87,12 +102,12 @@ const ParticleField = () => {
           key={i}
           className="absolute w-1 h-1 bg-primary/30 rounded-full"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
           }}
           animate={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
           }}
           transition={{
             duration: Math.random() * 10 + 10,
@@ -255,13 +270,15 @@ export function Hero() {
               className="flex gap-4"
             >
               {[
-                { Icon: Github, href: "#", color: "hover:text-gray-800" },
-                { Icon: Linkedin, href: "#", color: "hover:text-blue-600" },
-                { Icon: Mail, href: "#", color: "hover:text-red-500" }
+                { Icon: Github, href: "https://github.com/Nallasivan30", color: "hover:text-gray-800" },
+                { Icon: Linkedin, href: "https://www.linkedin.com/in/nallasivan-m/", color: "hover:text-blue-600" },
+                { Icon: Mail, href: "mailto:nallasivan30@gmail.com", color: "hover:text-red-500" }
               ].map(({ Icon, href, color }, i) => (
                 <motion.a
                   key={i}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   className={`p-3 rounded-full bg-card/80 backdrop-blur-sm border shadow-lg transition-all duration-300 ${color}`}

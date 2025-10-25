@@ -1,175 +1,123 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { motion, useInView } from "framer-motion"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Cpu, Code, Zap, Database, Cloud, Smartphone } from "lucide-react"
-import { useRef, useEffect, useState } from "react"
 
 const eceSkills = [
-  { name: "Circuit Design", level: 90, icon: Cpu, category: "Hardware" },
-  { name: "Signal Processing", level: 85, icon: Zap, category: "Analysis" },
-  { name: "Embedded Systems", level: 88, icon: Smartphone, category: "Programming" },
-  { name: "PCB Design", level: 82, icon: Cpu, category: "Hardware" },
-  { name: "MATLAB/Simulink", level: 80, icon: Code, category: "Software" },
-  { name: "VHDL/Verilog", level: 75, icon: Code, category: "Programming" },
+  { name: "Circuit Design", icon: Cpu, category: "Hardware" },
+  { name: "Signal Processing", icon: Zap, category: "Analysis" },
+  { name: "Embedded Systems", icon: Smartphone, category: "Programming" },
+  { name: "PCB Design", icon: Cpu, category: "Hardware" },
+  { name: "MATLAB/Simulink", icon: Code, category: "Software" },
+  { name: "VHDL/Verilog", icon: Code, category: "Programming" },
 ]
 
 const itSkills = [
-  { name: "React/Next.js", level: 95, icon: Code, category: "Frontend" },
-  { name: "Node.js", level: 90, icon: Database, category: "Backend" },
-  { name: "TypeScript", level: 92, icon: Code, category: "Language" },
-  { name: "AWS/Cloud", level: 85, icon: Cloud, category: "DevOps" },
-  { name: "PostgreSQL", level: 88, icon: Database, category: "Database" },
-  { name: "Python", level: 87, icon: Code, category: "Language" },
+  { name: "React/Next.js", icon: Code, category: "Frontend" },
+  { name: "Node.js", icon: Database, category: "Backend" },
+  { name: "TypeScript", icon: Code, category: "Language" },
+  { name: "AWS/Cloud", icon: Cloud, category: "DevOps" },
+  { name: "PostgreSQL", icon: Database, category: "Database" },
+  { name: "Python", icon: Code, category: "Language" },
 ]
 
-const ProgressBar = ({ level, delay }: { level: number; delay: number }) => {
-  const [width, setWidth] = useState(0)
-  const ref = useRef(null)
-  const isInView = useInView(ref)
-
-  useEffect(() => {
-    if (isInView) {
-      const timer = setTimeout(() => setWidth(level), delay)
-      return () => clearTimeout(timer)
-    }
-  }, [isInView, level, delay])
-
-  return (
-    <div ref={ref} className="w-full bg-muted rounded-full h-2 overflow-hidden">
-      <motion.div
-        className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
-        initial={{ width: 0 }}
-        animate={{ width: `${width}%` }}
-        transition={{ duration: 1, ease: "easeOut" }}
-      />
-    </div>
-  )
-}
-
-const SkillCard = ({ skill, index, delay }: { skill: any; index: number; delay: number }) => {
+const SkillCard = ({ skill, variant }: { skill: any; variant: "ece" | "it" }) => {
   const Icon = skill.icon
-  
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay }}
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      whileHover={{ scale: 1.05, y: -5 }}
+      transition={{ type: "spring", stiffness: 200, damping: 12 }}
+      className={`inline-flex flex-col items-start justify-center border rounded-2xl px-5 py-4 w-64 sm:w-72 mx-6 flex-shrink-0 backdrop-blur-md shadow-md transition-all duration-300
+        ${
+          variant === "ece"
+            ? "bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20 hover:from-primary/20 hover:to-accent/20"
+            : "bg-gradient-to-br from-accent/10 to-primary/10 border-accent/20 hover:from-accent/20 hover:to-primary/20"
+        }`}
     >
-      <Card className="group hover:shadow-lg transition-all duration-300 border-l-4 border-l-primary/50 hover:border-l-primary">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                <Icon className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm">{skill.name}</h3>
-                <Badge variant="outline" className="text-xs mt-1">
-                  {skill.category}
-                </Badge>
-              </div>
-            </div>
-            <span className="text-sm font-bold text-primary">{skill.level}%</span>
-          </div>
-          <ProgressBar level={skill.level} delay={delay * 100} />
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-3 mb-2">
+        <div
+          className={`p-2 rounded-xl ${
+            variant === "ece" ? "bg-primary/15" : "bg-accent/15"
+          }`}
+        >
+          <Icon
+            className={`h-5 w-5 ${
+              variant === "ece" ? "text-primary" : "text-accent"
+            }`}
+          />
+        </div>
+        <div>
+          <h3 className="font-semibold text-sm">{skill.name}</h3>
+          <Badge
+            variant="outline"
+            className={`text-xs mt-1 ${
+              variant === "ece"
+                ? "border-primary/40 text-primary"
+                : "border-accent/40 text-accent"
+            }`}
+          >
+            {skill.category}
+          </Badge>
+        </div>
+      </div>
     </motion.div>
   )
 }
 
 export function Skills() {
   return (
-    <section id="skills" className="py-20 bg-gradient-to-b from-background to-muted/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Technical <span className="text-primary">Expertise</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Combining electronics engineering fundamentals with modern software development
-          </p>
-        </motion.div>
+    <section className="py-20 bg-gradient-to-b from-background via-muted/40 to-muted/20 relative overflow-hidden">
+      {/* Floating glow effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-20 left-1/3 w-72 h-72 bg-primary/10 blur-3xl rounded-full animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/3 w-72 h-72 bg-accent/10 blur-3xl rounded-full animate-pulse"></div>
+      </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* ECE Skills */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+      <div className="container relative z-10 mx-auto px-4">
+        {/* Section header */}
+        <div className="text-center mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-          >
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20">
-                  <Cpu className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold">ECE Skills</h3>
-                  <p className="text-muted-foreground">Electronics & Communication Engineering</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              {eceSkills.map((skill, index) => (
-                <SkillCard
-                  key={skill.name}
-                  skill={skill}
-                  index={index}
-                  delay={index * 0.1}
-                />
-              ))}
-            </div>
-          </motion.div>
-
-          {/* IT Skills */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-3xl md:text-4xl font-bold mb-4"
           >
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-accent/20 to-primary/20">
-                  <Code className="h-6 w-6 text-accent" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold">IT Skills</h3>
-                  <p className="text-muted-foreground">Software Development & Cloud</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              {itSkills.map((skill, index) => (
-                <SkillCard
-                  key={skill.name}
-                  skill={skill}
-                  index={index}
-                  delay={index * 0.1 + 0.3}
-                />
-              ))}
-            </div>
-          </motion.div>
+            Technical <span className="text-primary">Expertise</span>
+          </motion.h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            A fusion of <span className="text-primary font-medium">electronics engineering</span> and{" "}
+            <span className="text-accent font-medium">modern software technologies</span>.
+          </p>
         </div>
 
-        {/* Skills Summary */}
+        {/* ECE Skills Row */}
+        <div className="relative w-full overflow-hidden py-6 mb-">
+          <div className="flex animate-scroll-horizontal whitespace-nowrap">
+            {[...eceSkills, ...eceSkills].map((skill, index) => (
+              <SkillCard key={`ece-${index}`} skill={skill} variant="ece" />
+            ))}
+          </div>
+        </div>
+
+        {/* IT Skills Row */}
+        <div className="relative w-full overflow-hidden py-6">
+          <div className="flex animate-scroll-horizontal-reverse whitespace-nowrap">
+            {[...itSkills, ...itSkills].map((skill, index) => (
+              <SkillCard key={`it-${index}`} skill={skill} variant="it" />
+            ))}
+          </div>
+        </div>
+
+        {/* Stats Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6"
         >
           {[
             { label: "Years Experience", value: "3+", color: "text-primary" },
@@ -180,7 +128,7 @@ export function Skills() {
             <motion.div
               key={stat.label}
               whileHover={{ scale: 1.05 }}
-              className="text-center p-6 rounded-xl bg-card border"
+              className="text-center p-6 rounded-2xl bg-card/60 backdrop-blur-md border shadow-sm hover:shadow-lg transition-all"
             >
               <div className={`text-3xl font-bold mb-2 ${stat.color}`}>{stat.value}</div>
               <div className="text-sm text-muted-foreground">{stat.label}</div>
@@ -188,6 +136,42 @@ export function Skills() {
           ))}
         </motion.div>
       </div>
+
+      {/* Scroll animations */}
+      <style jsx global>{`
+        @keyframes scroll-horizontal {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        @keyframes scroll-horizontal-reverse {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+        .animate-scroll-horizontal {
+          animation: scroll-horizontal 28s linear infinite;
+          display: inline-flex;
+        }
+        .animate-scroll-horizontal-reverse {
+          animation: scroll-horizontal-reverse 32s linear infinite;
+          display: inline-flex;
+        }
+        @media (max-width: 640px) {
+          .animate-scroll-horizontal {
+            animation-duration: 24s;
+          }
+          .animate-scroll-horizontal-reverse {
+            animation-duration: 30s;
+          }
+        }
+      `}</style>
     </section>
   )
 }
