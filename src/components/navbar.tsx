@@ -5,16 +5,15 @@ import { usePathname } from "next/navigation"
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion"
 import { ThemeToggle } from "./theme-toggle"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Code, Zap } from "lucide-react"
+import { Menu, X, Code, Zap, Mail, Github, Linkedin } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const links = [
-  { href: "/#home", label: "Home", icon: Code },
+  { href: "/", label: "Home", icon: Code },
+  { href: "/about", label: "About", icon: Zap },
+  { href: "/gallery", label: "Gallery", icon: Code },
   { href: "/#projects", label: "Projects", icon: Zap },
   { href: "/#skills", label: "Skills", icon: Code },
-  { href: "/#social", label: "Social", icon: Zap },
-  { href: "/#experience", label: "Experience", icon: Code },
-  { href: "/#contact", label: "Contact", icon: Zap },
 ]
 
 export function Navbar() {
@@ -56,7 +55,7 @@ export function Navbar() {
             <motion.div
               whileHover={{ rotate: 180 }}
               transition={{ duration: 0.3 }}
-              className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20"
+              className="p-2 rounded-md bg-gradient-to-br from-primary/20 to-accent/20"
             >
               <Code className="h-5 w-5 text-primary" />
             </motion.div>
@@ -77,7 +76,7 @@ export function Navbar() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className={`group flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-accent/10 ${
+                      className={`group flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-accent/10 ${
                         active ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
@@ -88,7 +87,20 @@ export function Navbar() {
                 )
               })}
             </ul>
-            <ThemeToggle />
+            <div className="flex items-center gap-4">
+              <div className="flex gap-2">
+                <a href="mailto:nallasivan30@gmail.com" className="p-2 rounded-md hover:bg-accent/10 transition-colors">
+                  <Mail className="h-4 w-4" />
+                </a>
+                <a href="https://github.com/Nallasivan30" target="_blank" rel="noopener noreferrer" className="p-2 rounded-md hover:bg-accent/10 transition-colors">
+                  <Github className="h-4 w-4" />
+                </a>
+                <a href="https://www.linkedin.com/in/nallasivan-m/" target="_blank" rel="noopener noreferrer" className="p-2 rounded-md hover:bg-accent/10 transition-colors">
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </div>
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -173,7 +185,7 @@ export function Navbar() {
                           <Link
                             href={link.href}
                             onClick={closeMenu}
-                            className={`group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                            className={`group flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
                               active 
                                 ? 'text-primary bg-primary/10 border border-primary/20' 
                                 : 'text-muted-foreground hover:text-foreground hover:bg-accent/10'
@@ -186,6 +198,21 @@ export function Navbar() {
                       )
                     })}
                   </ul>
+                  
+                  <div className="mt-8 pt-6 border-t">
+                    <p className="text-sm text-muted-foreground mb-4">Connect</p>
+                    <div className="flex gap-3">
+                      <a href="mailto:nallasivan30@gmail.com" className="p-3 rounded-md bg-accent/10 hover:bg-accent/20 transition-colors">
+                        <Mail className="h-5 w-5" />
+                      </a>
+                      <a href="https://github.com/Nallasivan30" target="_blank" rel="noopener noreferrer" className="p-3 rounded-md bg-accent/10 hover:bg-accent/20 transition-colors">
+                        <Github className="h-5 w-5" />
+                      </a>
+                      <a href="https://www.linkedin.com/in/nallasivan-m/" target="_blank" rel="noopener noreferrer" className="p-3 rounded-md bg-accent/10 hover:bg-accent/20 transition-colors">
+                        <Linkedin className="h-5 w-5" />
+                      </a>
+                    </div>
+                  </div>
                 </nav>
               </div>
             </motion.div>

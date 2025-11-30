@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { ArrowRight, Download, Github, Linkedin, Mail, Code, Database, Server, Smartphone, Globe, Zap, Terminal, Cpu } from "lucide-react"
 import { useRef, useEffect, useState } from "react"
+import { Span } from "next/dist/trace"
 
 const techStack = [
   { name: "React", icon: Code, color: "text-blue-500" },
@@ -174,7 +175,7 @@ export function Hero() {
         <motion.div
           animate={{ rotate: -360, scale: [1, 0.9, 1] }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-20 left-20 w-24 h-24 border border-accent/20 rounded-lg"
+          className="absolute bottom-20 left-20 w-24 h-24 border border-accent/20 rounded-md"
         />
       </div>
 
@@ -301,7 +302,7 @@ export function Hero() {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-2xl"
+                className="absolute z-20 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-2xl"
               >
                 <motion.div
                   animate={{ rotate: -360 }}

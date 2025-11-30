@@ -46,7 +46,7 @@ export function ContributionChart({ contributions }: ContributionChartProps) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-full left-0 mb-2 p-2 bg-popover border rounded-lg shadow-lg text-sm z-10"
+          className="absolute bottom-full left-0 mb-2 p-2 bg-popover border rounded-md shadow-lg text-sm z-10"
         >
           <div className="font-medium">{hoveredDay.count} contributions</div>
           <div className="text-muted-foreground">{hoveredDay.date}</div>

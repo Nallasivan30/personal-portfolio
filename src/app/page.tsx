@@ -1,7 +1,7 @@
 import { Hero } from "@/components/hero"
 import { Navbar } from "@/components/navbar"
 import { Projects } from "@/components/projects"
-import { ExperienceTimeline } from "@/components/experience-timeline"
+
 import { Skills } from "@/components/skills"
 import { SocialActivity } from "@/components/social-activity"
 import { Contact } from "@/components/contact"
@@ -23,9 +23,6 @@ export default function HomePage() {
         </section>
         <section id="social">
           <SocialActivity />
-        </section>
-        <section id="experience">
-          <ExperienceTimeline />
         </section>
         <section id="contact">
           <Contact />

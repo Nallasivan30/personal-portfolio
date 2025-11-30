@@ -90,7 +90,7 @@ export function Contact() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ x: 5 }}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-card border hover:bg-accent/5 transition-all duration-200"
+                  className="flex items-center gap-4 p-4 rounded-md bg-card border hover:bg-accent/5 transition-all duration-200"
                 >
                   <div className="p-3 rounded-full bg-primary/10">
                     <item.icon className="h-5 w-5 text-primary" />
@@ -164,7 +164,7 @@ export function Contact() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg"
+                      className="flex items-center gap-2 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md"
                     >
                       <CheckCircle className="h-5 w-5 text-green-600" />
                       <p className="text-sm text-green-700 dark:text-green-300">
@@ -177,7 +177,7 @@ export function Contact() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg"
+                      className="flex items-center gap-2 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-md"
                     >
                       <AlertCircle className="h-5 w-5 text-red-600" />
                       <p className="text-sm text-red-700 dark:text-red-300">

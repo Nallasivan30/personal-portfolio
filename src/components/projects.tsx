@@ -136,7 +136,7 @@ const ProjectCard = ({ project, index }: { project: any; index: number }) => {
           {/* Header */}
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+              <div className="p-2 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
                 <Icon className="h-5 w-5 text-primary" />
               </div>
               <div>
@@ -171,7 +171,7 @@ const ProjectCard = ({ project, index }: { project: any; index: number }) => {
           </div>
 
           {/* Image Placeholder */}
-          <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 rounded-lg flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
+          <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 rounded-md flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
             <Icon className="h-12 w-12 text-muted-foreground/50" />
           </div>
 
@@ -219,9 +219,9 @@ export function Projects() {
               <Button
                 key={category}
                 variant={activeCategory === category ? "default" : "outline"}
-                size="sm"
+               
                 onClick={() => setActiveCategory(category)}
-                className="transition-all duration-200"
+                className="transition-all duration-200 button-ripple"
               >
                 {category}
               </Button>

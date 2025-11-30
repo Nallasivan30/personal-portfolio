@@ -60,7 +60,7 @@ const mockLinkedInData = {
 const ActivityCard = ({ icon: Icon, title, value, change, color }: any) => (
   <motion.div
     whileHover={{ y: -2 }}
-    className="p-4 rounded-lg bg-card border"
+    className="p-4 rounded-md bg-card border"
   >
     <div className="flex items-center justify-between mb-2">
       <Icon className={`h-5 w-5 ${color}`} />
@@ -128,7 +128,7 @@ export function SocialActivity() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-gray-900 text-white">
+                  <div className="p-2 rounded-md bg-gray-900 text-white">
                     <Github className="h-5 w-5" />
                   </div>
                   GitHub Activity
@@ -187,7 +187,7 @@ export function SocialActivity() {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors cursor-pointer"
+                        className="flex items-start gap-3 p-3 rounded-md bg-muted/50 hover:bg-muted/70 transition-colors cursor-pointer"
                         onClick={() => window.open(repo.url, '_blank')}
                       >
                         <div className="p-1 rounded bg-primary/10">
@@ -244,7 +244,7 @@ export function SocialActivity() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-blue-600 text-white">
+                  <div className="p-2 rounded-md bg-blue-600 text-white">
                     <Linkedin className="h-5 w-5" />
                   </div>
                   LinkedIn Activity
@@ -292,7 +292,7 @@ export function SocialActivity() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="p-4 rounded-lg bg-muted/50 border"
+                        className="p-4 rounded-md bg-muted/50 border"
                       >
                         <p className="text-sm mb-3 line-clamp-2">{post.content}</p>
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
