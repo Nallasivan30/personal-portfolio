@@ -38,10 +38,10 @@ export function Navbar() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+        className={`fixed top-0 z-150 w-full transition-all duration-300 ${
           scrolled 
-            ? 'bg-background/80 backdrop-blur-md border-b shadow-sm' 
-            : 'bg-transparent'
+            ? 'bg-background/30 backdrop-blur-md border-b shadow-sm' 
+            : 'bg-background'
         }`}
       >
         <motion.div 
@@ -60,9 +60,8 @@ export function Navbar() {
               <Code className="h-5 w-5 text-primary" />
             </motion.div>
             <span className="font-bold text-lg">
-              <span className="text-primary">ECE</span>
-              <span className="text-accent">+</span>
-              <span className="text-foreground">IT</span>
+              <span className="text-primary">Nallasivan{"  "}</span>
+              <span className="text-accent">M</span>
             </span>
           </Link>
 
