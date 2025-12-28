@@ -1,256 +1,257 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { ExternalLink, Github, Cpu, Code, Zap, Database } from "lucide-react"
-import { useState } from "react"
+import { motion, useMotionValue, animate } from "framer-motion"
+import { ChevronLeft, ChevronRight, Github, ExternalLink } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
 
 const projects = [
   {
     id: 1,
     title: "Smart IoT Monitoring System",
-    description: "Real-time sensor data collection and analysis using ESP32, cloud integration, and responsive web dashboard.",
+    description: "Real-time sensor data collection and analysis using ESP32",
     category: "ECE + IT",
-    tools: ["ESP32", "React", "Node.js", "MongoDB", "WebSocket"],
-    image: "/api/placeholder/400/250",
-    gradient: "from-blue-500/20 to-purple-500/20",
-    icon: Cpu,
-    github: "#",
-    demo: "#",
-    featured: true
+    tools: ["ESP32", "React", "Node.js"],
+    gradient: "from-blue-500 to-purple-500",
+    icon: "📡",
   },
   {
     id: 2,
     title: "Signal Processing Web App",
-    description: "Interactive web application for digital signal processing with real-time visualization and analysis tools.",
+    description: "Interactive web application for digital signal processing",
     category: "ECE",
-    tools: ["Python", "NumPy", "React", "WebAssembly", "Chart.js"],
-    image: "/api/placeholder/400/250",
-    gradient: "from-green-500/20 to-teal-500/20",
-    icon: Zap,
-    github: "#",
-    demo: "#"
+    tools: ["Python", "NumPy", "React"],
+    gradient: "from-green-500 to-teal-500",
+    icon: "⚡",
   },
   {
     id: 3,
     title: "E-Commerce Platform",
-    description: "Full-stack e-commerce solution with payment integration, inventory management, and admin dashboard.",
+    description: "Full-stack e-commerce solution with payment integration",
     category: "IT",
-    tools: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Stripe"],
-    image: "/api/placeholder/400/250",
-    gradient: "from-orange-500/20 to-red-500/20",
-    icon: Code,
-    github: "#",
-    demo: "#"
+    tools: ["Next.js", "TypeScript", "Stripe"],
+    gradient: "from-orange-500 to-red-500",
+    icon: "🛒",
   },
   {
     id: 4,
     title: "PCB Design Automation Tool",
-    description: "Automated PCB layout generation tool with component placement optimization and routing algorithms.",
+    description: "Automated PCB layout generation with optimization",
     category: "ECE",
-    tools: ["Python", "KiCad", "OpenGL", "Qt", "Algorithm Design"],
-    image: "/api/placeholder/400/250",
-    gradient: "from-purple-500/20 to-pink-500/20",
-    icon: Cpu,
-    github: "#",
-    demo: "#"
+    tools: ["Python", "KiCad", "OpenGL"],
+    gradient: "from-purple-500 to-pink-500",
+    icon: "🔧",
   },
   {
     id: 5,
     title: "Cloud Analytics Dashboard",
-    description: "Scalable analytics platform with real-time data processing, machine learning insights, and interactive visualizations.",
+    description: "Scalable analytics platform with real-time processing",
     category: "IT",
-    tools: ["React", "AWS", "Lambda", "DynamoDB", "D3.js"],
-    image: "/api/placeholder/400/250",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    icon: Database,
-    github: "#",
-    demo: "#"
+    tools: ["React", "AWS", "D3.js"],
+    gradient: "from-cyan-500 to-blue-500",
+    icon: "📊",
   },
   {
     id: 6,
     title: "Embedded ML System",
-    description: "Edge AI system for real-time object detection using TensorFlow Lite on embedded hardware.",
+    description: "Edge AI system for real-time object detection",
     category: "ECE + IT",
-    tools: ["TensorFlow", "C++", "Raspberry Pi", "OpenCV", "Python"],
-    image: "/api/placeholder/400/250",
-    gradient: "from-indigo-500/20 to-purple-500/20",
-    icon: Zap,
-    github: "#",
-    demo: "#",
-    featured: true
-  }
+    tools: ["TensorFlow", "C++", "OpenCV"],
+    gradient: "from-indigo-500 to-purple-500",
+    icon: "🤖",
+  },
+  {
+    id: 7,
+    title: "Mobile App Framework",
+    description: "Cross-platform mobile development framework",
+    category: "IT",
+    tools: ["React Native", "Firebase", "Redux"],
+    gradient: "from-red-500 to-pink-500",
+    icon: "📱",
+  },
+  {
+    id: 8,
+    title: "AI Chatbot Engine",
+    description: "Advanced conversational AI with NLP integration",
+    category: "ECE + IT",
+    tools: ["Python", "TensorFlow", "FastAPI"],
+    gradient: "from-yellow-500 to-orange-500",
+    icon: "💬",
+  },
 ]
 
-const categories = ["All", "ECE", "IT", "ECE + IT"]
+/* ================= CARD ================= */
 
-const ProjectCard = ({ project, index }: { project: any; index: number }) => {
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-  const mouseXSpring = useSpring(x)
-  const mouseYSpring = useSpring(y)
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["17.5deg", "-17.5deg"])
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-17.5deg", "17.5deg"])
+const CARD_WIDTH = 280 // w-64 + gap + scale compensation
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const width = rect.width
-    const height = rect.height
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
-    const xPct = mouseX / width - 0.5
-    const yPct = mouseY / height - 0.5
-    x.set(xPct)
-    y.set(yPct)
-  }
-
-  const handleMouseLeave = () => {
-    x.set(0)
-    y.set(0)
-  }
-
-  const Icon = project.icon
-
+const ProjectCard = ({
+  project,
+  isCenter,
+}: {
+  project: any
+  isCenter: boolean
+}) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      style={{
-        rotateY: rotateY,
-        rotateX: rotateX,
-        transformStyle: "preserve-3d"
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className={`group relative ${project.featured ? 'md:col-span-2' : ''}`}
+      animate={{ scale: isCenter ? 1.1 : 0.8, opacity: isCenter ? 1 : 0.6 }}
+      transition={{ duration: 0.4 }}
+      className="flex-shrink-0 w-64"
     >
-      <Card className="overflow-hidden border-0 bg-gradient-to-br from-card to-card/50 backdrop-blur-sm hover:shadow-2xl transition-all duration-500">
-        <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-        
-        <div className="relative p-6 space-y-4">
-          {/* Header */}
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                <Icon className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <Badge variant="outline" className="mb-2">
-                  {project.category}
-                </Badge>
-                {project.featured && (
-                  <Badge className="ml-2 bg-gradient-to-r from-primary to-accent">
-                    Featured
-                  </Badge>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button size="icon" variant="ghost" className="h-8 w-8">
-                <Github className="h-4 w-4" />
-              </Button>
-              <Button size="icon" variant="ghost" className="h-8 w-8">
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </div>
+      <div
+        className={`relative h-80 rounded-2xl bg-gradient-to-br ${project.gradient} p-6 overflow-hidden shadow-lg`}
+      >
+        <div className="absolute inset-0 bg-black/20" />
+
+        <div className="relative z-10 h-full flex flex-col justify-between">
+          <div>
+            <div className="text-5xl mb-3">{project.icon}</div>
+            <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs text-white">
+              {project.category}
+            </span>
           </div>
 
-          {/* Content */}
-          <div className="space-y-3">
-            <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
-              {project.title}
-            </h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+          <div>
+            <h3 className="text-xl font-bold text-white">{project.title}</h3>
+            <p className="text-sm text-white/90 line-clamp-2">
               {project.description}
             </p>
           </div>
 
-          {/* Image Placeholder */}
-          <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 rounded-md flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
-            <Icon className="h-12 w-12 text-muted-foreground/50" />
-          </div>
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {project.tools.slice(0, 2).map((tool: string) => (
+                <span
+                  key={tool}
+                  className="px-2 py-1 bg-white/10 rounded text-xs text-white"
+                >
+                  {tool}
+                </span>
+              ))}
+              {project.tools.length > 2 && (
+                <span className="px-2 py-1 bg-white/10 rounded text-xs text-white">
+                  +{project.tools.length - 2}
+                </span>
+              )}
+            </div>
 
-          {/* Technologies */}
-          <div className="flex flex-wrap gap-2">
-            {project.tools.map((tool: string) => (
-              <Badge key={tool} variant="secondary" className="text-xs">
-                {tool}
-              </Badge>
-            ))}
+            <div className="flex gap-2">
+              <button className="flex-1 bg-white/20 rounded-lg py-2 text-white flex justify-center gap-2">
+                <Github size={16} />
+                Code
+              </button>
+              <button className="flex-1 bg-white/20 rounded-lg py-2 text-white flex justify-center gap-2">
+                <ExternalLink size={16} />
+                Demo
+              </button>
+            </div>
           </div>
         </div>
-      </Card>
+      </div>
     </motion.div>
   )
 }
 
+/* ================= CAROUSEL ================= */
+
 export function Projects() {
-  const [activeCategory, setActiveCategory] = useState("All")
-  
-  const filteredProjects = projects.filter(project => 
-    activeCategory === "All" || project.category === activeCategory
-  )
+  const total = projects.length
+  const duplicated = useMemo(() => [...projects, ...projects, ...projects], [])
+  const [index, setIndex] = useState(total) // Start at center
+
+  const x = useMotionValue(-total * CARD_WIDTH) // Start centered
+
+  const animateTo = (i: number) => {
+    animate(x, -i * CARD_WIDTH, {
+      duration: 0.5,
+      ease: "easeOut",
+    })
+  }
+
+  const next = () => {
+    const newIndex = index + 1
+    setIndex(newIndex)
+    animateTo(newIndex)
+  }
+
+  const prev = () => {
+    const newIndex = index - 1
+    setIndex(newIndex)
+    animateTo(newIndex)
+  }
+
+  /* LOOP FIX */
+  useEffect(() => {
+    if (index >= total * 2) {
+      setTimeout(() => {
+        x.set(-total * CARD_WIDTH)
+        setIndex(total)
+      }, 500)
+    }
+    if (index < total) {
+      setTimeout(() => {
+        x.set(-(total * 2 - 1) * CARD_WIDTH)
+        setIndex(total * 2 - 1)
+      }, 500)
+    }
+  }, [index, total, x])
 
   return (
-    <section id="projects" className="py-20 bg-gradient-to-b from-background to-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Featured <span className="text-primary">Projects</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Showcasing the intersection of electronics engineering and software development
-          </p>
-          
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={activeCategory === category ? "default" : "outline"}
-               
-                onClick={() => setActiveCategory(category)}
-                className="transition-all duration-200 button-ripple"
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-        </motion.div>
+    <section className="py-20 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4">
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
-          ))}
+        {/* HEADER */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white">
+            Featured{" "}
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              Projects
+            </span>
+          </h2>
         </div>
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mt-16"
-        >
-          <p className="text-muted-foreground mb-6">
-            Interested in seeing more of my work?
-          </p>
-          <Button size="lg" className="group">
-            View All Projects
-            <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Button>
-        </motion.div>
+        {/* CAROUSEL */}
+        <div className="relative flex items-center justify-center gap-4">
+
+          <button onClick={prev} className="p-3 bg-cyan-500 rounded-full">
+            <ChevronLeft className="text-white" />
+          </button>
+
+          <div className="overflow-hidden w-full" style={{ width: '1400px' }}>
+            <motion.div
+              className="flex gap-4 justify-start"
+              style={{ x, paddingLeft: '560px' }} // Center the first 5 cards
+            >
+              {duplicated.map((project, i) => (
+                <ProjectCard
+                  key={`${project.id}-${i}`}
+                  project={project}
+                  isCenter={i === index}
+                />
+              ))}
+            </motion.div>
+          </div>
+
+          <button onClick={next} className="p-3 bg-cyan-500 rounded-full">
+            <ChevronRight className="text-white" />
+          </button>
+        </div>
+
+        {/* PAGINATION */}
+        <div className="flex justify-center gap-2 mt-8">
+          {projects.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                const newIndex = i + total
+                setIndex(newIndex)
+                animateTo(newIndex)
+              }}
+              className={`h-2 rounded-full ${
+                (index - total) === i ? "w-8 bg-cyan-400" : "w-2 bg-gray-600"
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )
