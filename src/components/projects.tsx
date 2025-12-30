@@ -87,13 +87,17 @@ const CARD_WIDTH = 280 // w-64 + gap + scale compensation
 const ProjectCard = ({
   project,
   isCenter,
+  isRight,
+  isLeft,
 }: {
   project: any
   isCenter: boolean
+  isRight:boolean
+  isLeft:boolean
 }) => {
   return (
     <motion.div
-      animate={{ scale: isCenter ? 1.1 : 0.8, opacity: isCenter ? 1 : 0.6 }}
+      animate={{ scale: isCenter ? 1.: isRight || isLeft ?0.9:0.77, opacity: isCenter ? 1 : 0.6 }}
       transition={{ duration: 0.4 }}
       className="flex-shrink-0 w-64"
     >
@@ -197,7 +201,7 @@ export function Projects() {
 
   return (
     <section className="py-20 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
         <div className="text-center mb-16">
@@ -226,6 +230,9 @@ export function Projects() {
                   key={`${project.id}-${i}`}
                   project={project}
                   isCenter={i === index}
+                  isRight ={ i === index+1}
+                  isLeft ={i === index-1}
+                  
                 />
               ))}
             </motion.div>

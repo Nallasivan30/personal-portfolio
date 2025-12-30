@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion"
 import { ThemeToggle } from "./theme-toggle"
 import { Button } from "@/components/ui/button"
@@ -9,15 +10,27 @@ import { Menu, X, Code, Zap, Mail, Github, Linkedin } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const links = [
-  { href: "/", label: "Home", icon: Code },
-  { href: "/about", label: "About", icon: Zap },
-  { href: "/gallery", label: "Gallery", icon: Code },
-  { href: "/#projects", label: "Projects", icon: Zap },
-  { href: "/#skills", label: "Skills", icon: Code },
+  { href: "/", label: "Home", icon: Code, type: "route" },
+  { href: "/about", label: "About", icon: Zap, type: "route" },
+  { href: "/gallery", label: "Gallery", icon: Code, type: "route" },
+  { href: "projects", label: "Projects", icon: Zap, type: "scroll" },
+  { href: "skills", label: "Skills", icon: Code, type: "scroll" },
 ]
+
+const scrollToSection = (sectionId: string, pathname: string, router: any) => {
+  if (pathname !== '/') {
+    router.push(`/#${sectionId}`)
+    return
+  }
+  const element = document.getElementById(sectionId)
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth" })
+  }
+}
 
 export function Navbar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { scrollYProgress } = useScroll()
@@ -30,6 +43,18 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    if (pathname === '/' && window.location.hash) {
+      const sectionId = window.location.hash.substring(1)
+      setTimeout(() => {
+        const element = document.getElementById(sectionId)
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" })
+        }
+      }, 100)
+    }
+  }, [pathname])
 
   const closeMenu = () => setIsOpen(false)
 
@@ -73,15 +98,25 @@ export function Navbar() {
                 const active = pathname === link.href
                 return (
                   <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className={`group flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-accent/10 ${
-                        active ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4 transition-transform group-hover:scale-110" />
-                      {link.label}
-                    </Link>
+                    {link.type === "scroll" ? (
+                      <button
+                        onClick={() => scrollToSection(link.href, pathname, router)}
+                        className={`group flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-accent/10 text-muted-foreground hover:text-foreground`}
+                      >
+                        <Icon className="h-4 w-4 transition-transform group-hover:scale-110" />
+                        {link.label}
+                      </button>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className={`group flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-accent/10 ${
+                          active ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        <Icon className="h-4 w-4 transition-transform group-hover:scale-110" />
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 )
               })}
@@ -181,18 +216,31 @@ export function Navbar() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
                         >
-                          <Link
-                            href={link.href}
-                            onClick={closeMenu}
-                            className={`group flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
-                              active 
-                                ? 'text-primary bg-primary/10 border border-primary/20' 
-                                : 'text-muted-foreground hover:text-foreground hover:bg-accent/10'
-                            }`}
-                          >
-                            <Icon className="h-5 w-5 transition-transform group-hover:scale-110" />
-                            {link.label}
-                          </Link>
+                          {link.type === "scroll" ? (
+                            <button
+                              onClick={() => {
+                                scrollToSection(link.href, pathname, router)
+                                closeMenu()
+                              }}
+                              className={`group flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 text-muted-foreground hover:text-foreground hover:bg-accent/10 w-full text-left`}
+                            >
+                              <Icon className="h-5 w-5 transition-transform group-hover:scale-110" />
+                              {link.label}
+                            </button>
+                          ) : (
+                            <Link
+                              href={link.href}
+                              onClick={closeMenu}
+                              className={`group flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                                active 
+                                  ? 'text-primary bg-primary/10 border border-primary/20' 
+                                  : 'text-muted-foreground hover:text-foreground hover:bg-accent/10'
+                              }`}
+                            >
+                              <Icon className="h-5 w-5 transition-transform group-hover:scale-110" />
+                              {link.label}
+                            </Link>
+                          )}
                         </motion.li>
                       )
                     })}
