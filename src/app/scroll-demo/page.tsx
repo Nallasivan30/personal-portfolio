@@ -51,8 +51,8 @@ function Section2() {
   })
 
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.7, 1.3, 0.7])
-  const rotate = useTransform(scrollYProgress, [0, 1], [-45, 45])
-  const x = useTransform(scrollYProgress, [0, 1], [-100, 100])
+  const rotate = useTransform(scrollYProgress, [0, 1], [-450, 450])
+  const x = useTransform(scrollYProgress, [0, 1], [-1110, 1500])
 
   return (
     <section ref={ref} className="h-screen flex items-center justify-center bg-gradient-to-br from-pink-900 to-rose-900 relative overflow-hidden">
@@ -80,7 +80,7 @@ function Section3() {
   })
 
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.6, 1.4, 0.6])
-  const y = useTransform(scrollYProgress, [0, 1], [80, -80])
+  const y = useTransform(scrollYProgress, [0, 1], [180, -180])
   const rotateX = useTransform(scrollYProgress, [0, 1], [15, -15])
 
   return (
