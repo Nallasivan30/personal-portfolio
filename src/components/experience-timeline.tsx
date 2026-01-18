@@ -283,7 +283,7 @@ export function ExperienceTimeline() {
   }
 
   return (
-    <section id="experience" className="relative sticky">
+    <section id="experience" className="relative">
       <div className="py-16 text-center bg-background">
         <motion.h2 
           initial={{ opacity: 0, y: 30 }}
